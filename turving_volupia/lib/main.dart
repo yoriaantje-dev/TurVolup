@@ -12,9 +12,10 @@ class FlutterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(),
+      home: const HomeScreen(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red),
+        primaryColorDark: Colors.red.shade900,
       ),
       darkTheme: ThemeData.dark(),
     );

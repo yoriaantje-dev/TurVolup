@@ -20,11 +20,12 @@ class MenuDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.background,
             ),
-            child: Center(
-              child: Image.asset(
-                "assets/KEMWIT.png",
-                fit: BoxFit.fitHeight,
-              ),
+            child: const Center(
+              // child: Image.asset(
+                child: Placeholder(),
+              //   "assets/KEMWIT.png",
+              //   fit: BoxFit.fitHeight,
+              // ),
             ),
           ),
           Expanded(
