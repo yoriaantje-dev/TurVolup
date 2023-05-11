@@ -91,7 +91,7 @@ class MenuDrawer extends StatelessWidget {
   Widget getScreen(String menuItem) {
     switch (menuItem) {
       case "Home":
-        return HomeScreen();
+        return const HomeScreen();
       case "Categories":
         return const CategoryScreen();
       case "Turfing":
@@ -99,7 +99,7 @@ class MenuDrawer extends StatelessWidget {
       case "About":
         return const AboutScreen();
       default:
-        return HomeScreen();
+        return const HomeScreen();
     }
   }
 }

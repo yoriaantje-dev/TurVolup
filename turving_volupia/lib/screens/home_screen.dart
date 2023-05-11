@@ -1,6 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 
 import '../data/models/turv_model.dart';
+
+// Disabled for Release v0.0.1
+// ignore: unused_import
 import '../shared/menu_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,12 +22,24 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Home")),
-      drawer: const MenuDrawer(),
-      body: ListView.builder(
-        itemCount: collection.items.length,
-        itemBuilder: (BuildContext context, int index) {
-          return turvItemCard(collection.items[index]);
-        },
+      // Disabled for Release v0.0.1
+      // drawer: const MenuDrawer(),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: collection.items.length,
+              itemBuilder: (BuildContext context, int index) {
+                return turvItemCard(collection.items[index]);
+              },
+            ),
+          ),
+          ElevatedButton(
+              onPressed: () {
+                print("Not Implemented yet!");
+              },
+              child: const Text("Add a category"))
+        ],
       ),
     );
   }
