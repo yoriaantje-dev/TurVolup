@@ -22,7 +22,7 @@ class MenuDrawer extends StatelessWidget {
             ),
             child: const Center(
               // child: Image.asset(
-                child: Placeholder(),
+              child: Placeholder(),
               //   "assets/KEMWIT.png",
               //   fit: BoxFit.fitHeight,
               // ),
@@ -91,7 +91,7 @@ class MenuDrawer extends StatelessWidget {
   Widget getScreen(String menuItem) {
     switch (menuItem) {
       case "Home":
-        return const HomeScreen();
+        return HomeScreen();
       case "Categories":
         return const CategoryScreen();
       case "Turfing":
@@ -99,7 +99,7 @@ class MenuDrawer extends StatelessWidget {
       case "About":
         return const AboutScreen();
       default:
-        return const HomeScreen();
+        return HomeScreen();
     }
   }
 }

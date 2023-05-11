@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'data/locator.dart';
 import 'screens/home_screen.dart';
 
 void main() {
+  setupLocator();
   runApp(const FlutterApp());
 }
 

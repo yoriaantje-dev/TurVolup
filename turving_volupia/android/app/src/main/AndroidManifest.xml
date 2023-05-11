@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.turving_volupia">
    <application
-        android:label="turving_volupia"
+        android:label="Turven bij Volupia"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
