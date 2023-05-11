@@ -1,12 +1,11 @@
 // ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
-
-import '../data/models/turv_model.dart';
 
 // Disabled for Release v0.0.1
 // ignore: unused_import
 import '../shared/menu_drawer.dart';
+import '../shared/popup_dialog.dart';
+import '../data/models/turv_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,35 +17,57 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TurvCollection collection = TurvCollection.exampleCollection();
 
+  void _addTurvableItem() async {
+    final item = await showDialog<TurvableItem>(
+      context: context,
+      builder: (context) => const AddTurvableItemDialog(),
+    );
+    if (item != null) {
+      setState(() {
+        collection.items.add(item);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Home")),
       // Disabled for Release v0.0.1
       // drawer: const MenuDrawer(),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: collection.items.length,
               itemBuilder: (BuildContext context, int index) {
                 return turvItemCard(collection.items[index]);
               },
             ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: ElevatedButton(
+          onPressed: _addTurvableItem,
+          style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(Colors.redAccent)),
+          child: const Text(
+            "VOEG TURF ITEM TOE",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          ElevatedButton(
-              onPressed: () {
-                print("Not Implemented yet!");
-              },
-              child: const Text("Add a category"))
-        ],
+        ),
       ),
     );
   }
 
   Widget turvItemCard(TurvableItem item) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Card(
         color: Colors.redAccent,
         child: Row(
@@ -59,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -74,12 +96,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                     },
                     icon: const Icon(Icons.exposure_neg_1),
+                    color: Colors.white,
+                    iconSize: 25,
                   ),
                   Text(
                     item.count.toString(),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
+                      color: Colors.white,
                     ),
                   ),
                   IconButton(
@@ -89,6 +114,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                     },
                     icon: const Icon(Icons.exposure_plus_1),
+                    color: Colors.white,
+                    iconSize: 25,
                   ),
                 ],
               ),
