@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../screens/about_screen.dart';
 import '../screens/category_screen.dart';
 import '../screens/home_screen.dart';
-import '../screens/turf_screen.dart';
 
 class MenuDrawer extends StatelessWidget {
   const MenuDrawer({super.key});
@@ -10,7 +9,7 @@ class MenuDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> menuTitles = [];
-    menuTitles = ["Home", "Categories", "Turfing", "About"];
+    menuTitles = ["Home", "Categories", "Export"];
 
     return Drawer(
       child: Column(
@@ -66,11 +65,8 @@ class MenuDrawer extends StatelessWidget {
       case "Home":
         returnIcon = Icons.home;
         break;
-      case "Turf items":
+      case "Categories":
         returnIcon = Icons.list_rounded;
-        break;
-      case "Turven":
-        returnIcon = Icons.exposure;
         break;
       case "Export":
         returnIcon = Icons.send_to_mobile;
@@ -92,9 +88,7 @@ class MenuDrawer extends StatelessWidget {
         return const HomeScreen();
       case "Categories":
         return const CategoryScreen();
-      case "Turfing":
-        return const TurfScreen();
-      case "About":
+      case "Export":
         return const AboutScreen();
       default:
         return const HomeScreen();
