@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text("Home")),
       // Disabled for Release v0.0.1
-      // drawer: const MenuDrawer(),
+      drawer: const MenuDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [

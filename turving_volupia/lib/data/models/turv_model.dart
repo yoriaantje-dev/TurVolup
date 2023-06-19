@@ -31,4 +31,9 @@ class TurvableItem {
     if (count < 0) count = 0;
     print("Removed $amount from $name: $count");
   }
+
+  void set(int amount){
+    count == amount;
+    print("Set $amount in $name");
+  }
 }

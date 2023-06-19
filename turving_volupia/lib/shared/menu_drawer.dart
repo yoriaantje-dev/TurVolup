@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:turving_volupia/screens/about_screen.dart';
-import 'package:turving_volupia/screens/category_screen.dart';
-import 'package:turving_volupia/screens/home_screen.dart';
-
+import '../screens/about_screen.dart';
+import '../screens/category_screen.dart';
+import '../screens/home_screen.dart';
 import '../screens/turf_screen.dart';
 
 class MenuDrawer extends StatelessWidget {
@@ -20,12 +19,11 @@ class MenuDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.background,
             ),
-            child: const Center(
-              // child: Image.asset(
-              child: Placeholder(),
-              //   "assets/KEMWIT.png",
-              //   fit: BoxFit.fitHeight,
-              // ),
+            child: Center(
+              child: Image.asset(
+                "assets/VolupiaLogo_WIT.png",
+                fit: BoxFit.fitHeight,
+                ),
             ),
           ),
           Expanded(
@@ -68,14 +66,14 @@ class MenuDrawer extends StatelessWidget {
       case "Home":
         returnIcon = Icons.home;
         break;
-      case "Categories":
+      case "Turf items":
         returnIcon = Icons.list_rounded;
         break;
-      case "Turfing":
+      case "Turven":
         returnIcon = Icons.exposure;
         break;
-      case "About":
-        returnIcon = Icons.info;
+      case "Export":
+        returnIcon = Icons.send_to_mobile;
         break;
       default:
         returnIcon = Icons.question_mark;
