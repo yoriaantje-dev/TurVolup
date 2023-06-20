@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:turving_volupia/screens/about_screen.dart';
-import 'package:turving_volupia/screens/category_screen.dart';
-import 'package:turving_volupia/screens/home_screen.dart';
-
-import '../screens/turf_screen.dart';
+import '../screens/about_screen.dart';
+import '../screens/category_screen.dart';
+import '../screens/home_screen.dart';
 
 class MenuDrawer extends StatelessWidget {
   const MenuDrawer({super.key});
@@ -11,7 +9,7 @@ class MenuDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> menuTitles = [];
-    menuTitles = ["Home", "Categories", "Turfing", "About"];
+    menuTitles = ["Home", "Categories", "Export"];
 
     return Drawer(
       child: Column(
@@ -20,12 +18,11 @@ class MenuDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.background,
             ),
-            child: const Center(
-              // child: Image.asset(
-              child: Placeholder(),
-              //   "assets/KEMWIT.png",
-              //   fit: BoxFit.fitHeight,
-              // ),
+            child: Center(
+              child: Image.asset(
+                "assets/VolupiaLogo_WIT.png",
+                fit: BoxFit.fitHeight,
+                ),
             ),
           ),
           Expanded(
@@ -71,11 +68,8 @@ class MenuDrawer extends StatelessWidget {
       case "Categories":
         returnIcon = Icons.list_rounded;
         break;
-      case "Turfing":
-        returnIcon = Icons.exposure;
-        break;
-      case "About":
-        returnIcon = Icons.info;
+      case "Export":
+        returnIcon = Icons.send_to_mobile;
         break;
       default:
         returnIcon = Icons.question_mark;
@@ -94,9 +88,7 @@ class MenuDrawer extends StatelessWidget {
         return const HomeScreen();
       case "Categories":
         return const CategoryScreen();
-      case "Turfing":
-        return const TurfScreen();
-      case "About":
+      case "Export":
         return const AboutScreen();
       default:
         return const HomeScreen();

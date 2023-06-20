@@ -1,11 +1,15 @@
 // ignore_for_file: avoid_print
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:turving_volupia/screens/widgets/file_prefix_bar.dart';
 
 // Disabled for Release v0.0.1
 // ignore: unused_import
+import '../data/file_helper.dart';
 import '../shared/menu_drawer.dart';
 import '../shared/popup_dialog.dart';
-import '../data/models/turv_model.dart';
+import 'turf_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,113 +19,92 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  TurvCollection collection = TurvCollection.exampleCollection();
-
-  void _addTurvableItem() async {
-    final item = await showDialog<TurvableItem>(
-      context: context,
-      builder: (context) => const AddTurvableItemDialog(),
-    );
-    if (item != null) {
-      setState(() {
-        collection.items.add(item);
-      });
-    }
-  }
+  final TextEditingController prefixController = TextEditingController();
+  FileHelper helper = FileHelper();
 
   @override
   Widget build(BuildContext context) {
+    if (prefixController.text == "") {
+      prefixController.text = "BAR";
+    }
     return Scaffold(
       appBar: AppBar(title: const Text("Home")),
-      // Disabled for Release v0.0.1
-      // drawer: const MenuDrawer(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: collection.items.length,
-              itemBuilder: (BuildContext context, int index) {
-                return turvItemCard(collection.items[index]);
-              },
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: ElevatedButton(
-          onPressed: _addTurvableItem,
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.redAccent)),
-          child: const Text(
-            "VOEG TURF ITEM TOE",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-    );
-  }
+      drawer: const MenuDrawer(),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () async {
+          helper.getFiles().then((List<File> files) {
+            DateTime currentDate = DateTime.now();
+            String fileName =
+                "${prefixController.text}_${currentDate.day}_${currentDate.month}_${currentDate.year}";
 
-  Widget turvItemCard(TurvableItem item) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Card(
-        color: Colors.redAccent,
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  item.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.white,
+            bool flag = false;
+            for (File file in files) {
+              if (basename(file.path) == fileName) {
+                print("${basename(file.path)} is equal to $fileName");
+                flag = true;
+              }
+            }
+            if (flag) {
+              confirmOverwriteFile(context, prefixController.text);
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TurfScreen(
+                    null,
+                    prefixController.text,
                   ),
                 ),
-              ),
+              );
+            }
+          });
+        },
+      ),
+      body: Column(
+        children: [
+          FilePrefixBar(prefixController: prefixController),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text(
+              "Selecteer een bestand om in te werken: ",
+              style: TextStyle(fontSize: 19),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        item.remove(1);
-                      });
-                    },
-                    icon: const Icon(Icons.exposure_neg_1),
-                    color: Colors.white,
-                    iconSize: 25,
-                  ),
-                  Text(
-                    item.count.toString(),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        item.add(1);
-                      });
-                    },
-                    icon: const Icon(Icons.exposure_plus_1),
-                    color: Colors.white,
-                    iconSize: 25,
-                  ),
-                ],
-              ),
+          ),
+          Expanded(
+            child: FutureBuilder(
+              future: helper.getFiles(),
+              builder: (context, snapshot) {
+                List<File> files = snapshot.data ?? [];
+                return ListView.builder(
+                  itemCount: files.length,
+                  itemBuilder: (context, index) {
+                    return Dismissible(
+                      key: Key(files[index].toString()),
+                      onDismissed: (direction) {
+                        helper.deleteFile(files[index]);
+                      },
+                      child: ListTile(
+                        title: Text(basename(files[index].path)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TurfScreen(
+                                files[index],
+                                prefixController.text,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

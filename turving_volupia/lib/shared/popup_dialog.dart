@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../data/models/turv_model.dart';
+import '../screens/turf_screen.dart';
 
 class AddTurvableItemDialog extends StatefulWidget {
   const AddTurvableItemDialog({super.key});
@@ -52,7 +53,9 @@ class _AddTurvableItemDialogState extends State<AddTurvableItemDialog> {
           TextField(
             controller: _costController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))],
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))
+            ],
             decoration: const InputDecoration(hintText: 'Enter cost'),
           ),
         ],
@@ -73,4 +76,44 @@ class _AddTurvableItemDialogState extends State<AddTurvableItemDialog> {
       ],
     );
   }
+}
+
+confirmOverwriteFile(BuildContext context, String prefix) {
+  Widget cancelButton = ElevatedButton(
+    child: const Text("Cancel"),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+  Widget continueButton = ElevatedButton(
+    child: const Text("Continue"),
+    onPressed: () {
+      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TurfScreen(
+            null,
+            prefix,
+          ),
+        ),
+      );
+    },
+  );
+  AlertDialog alert = AlertDialog(
+    title: const Text("Pas op!"),
+    content: const Text(
+        "Een bestand met deze naam bestaat al, wil je het overschrijven?"),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

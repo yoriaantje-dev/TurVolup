@@ -4,7 +4,10 @@
 			"path": "turving_volupia"
 		},
 		{
-			"path": "."
+			"path": "data_storage_demo"
+		},
+		{
+			"path": "../KEMBIT_Mobile_POC_A/flutter_asc/lib"
 		}
 	],
 	"settings": {}
