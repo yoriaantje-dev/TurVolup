@@ -20,7 +20,6 @@ class TurvCollection {
 
     Map<String, dynamic> saveMap = {"date": collectionId, "items": turfItemMap};
     String encoded = jsonEncode(saveMap);
-    print(encoded);
     return encoded;
   }
 
@@ -43,7 +42,6 @@ class TurvCollection {
       tempList.add(TurvableItem.fromJSON(key, subMap[key]));
     }
     items = tempList;
-    print(items.length);
   }
 }
 

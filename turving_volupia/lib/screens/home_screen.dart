@@ -8,6 +8,7 @@ import 'package:turving_volupia/screens/widgets/file_prefix_bar.dart';
 // ignore: unused_import
 import '../data/file_helper.dart';
 import '../shared/menu_drawer.dart';
+import '../shared/popup_dialog.dart';
 import 'turf_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,13 +32,33 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: const MenuDrawer(),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () {
-          //TODO: Navigate to a new turf screen with the date and prefix filename
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      TurfScreen(null, prefixController.text)));
+        onPressed: () async {
+          helper.getFiles().then((List<File> files) {
+            DateTime currentDate = DateTime.now();
+            String fileName =
+                "${prefixController.text}_${currentDate.day}_${currentDate.month}_${currentDate.year}";
+
+            bool flag = false;
+            for (File file in files) {
+              if (basename(file.path) == fileName) {
+                print("${basename(file.path)} is equal to $fileName");
+                flag = true;
+              }
+            }
+            if (flag) {
+              confirmOverwriteFile(context, prefixController.text);
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TurfScreen(
+                    null,
+                    prefixController.text,
+                  ),
+                ),
+              );
+            }
+          });
         },
       ),
       body: Column(
@@ -45,7 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
           FilePrefixBar(prefixController: prefixController),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Text("Selecteer een bestand om in te werken: ", style: TextStyle(fontSize: 19),),
+            child: Text(
+              "Selecteer een bestand om in te werken: ",
+              style: TextStyle(fontSize: 19),
+            ),
           ),
           Expanded(
             child: FutureBuilder(
@@ -64,10 +88,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: Text(basename(files[index].path)),
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TurfScreen(
-                                      files[index], prefixController.text)));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TurfScreen(
+                                files[index],
+                                prefixController.text,
+                              ),
+                            ),
+                          );
                         },
                       ),
                     );

@@ -1,12 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../data/file_helper.dart';
 import '../data/models/turv_model.dart';
 import '../shared/menu_drawer.dart';
 import '../shared/popup_dialog.dart';
+
+import 'widgets/flow_menu.dart';
 import 'widgets/turf_item.dart';
 
 class TurfScreen extends StatefulWidget {
@@ -18,9 +19,26 @@ class TurfScreen extends StatefulWidget {
   State<TurfScreen> createState() => _TurfScreenState();
 }
 
-class _TurfScreenState extends State<TurfScreen> {
+class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
   TurvCollection? collection;
+  bool loadedFromFile = false;
   FileHelper helper = FileHelper();
+
+  Future<bool> _loadFromFile() async {
+    if (widget.file != null) {
+      String jsonString = await helper.readFromFile(widget.file!);
+      Map<String, dynamic> mappedJson = jsonDecode(jsonString);
+      TurvCollection returnThis = TurvCollection.fromJSON(mappedJson);
+      setState(() {
+        collection = returnThis;
+      });
+      return true;
+    }
+    setState(() {
+      collection = TurvCollection.exampleCollection(widget.prefix);
+    });
+    return false;
+  }
 
   void _addTurvableItem() async {
     final item = await showDialog<TurvableItem>(
@@ -34,13 +52,45 @@ class _TurfScreenState extends State<TurfScreen> {
     }
   }
 
-  void _saveTurfCollection() async {
+  void _saveTurfCollection({bool silent = false}) async {
     List<TurvableItem> saveList = [];
     for (TurvableItem item in collection!.items) {
       saveList.add(item);
     }
     collection!.items = saveList;
     helper.saveCollection(collection!);
+    if (!silent) {
+      _savedMessage();
+    }
+  }
+
+  void _showLoadingStatus(bool status) {
+    if (status) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Loaded from file."),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Defaults loaded."),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  void _savedMessage() {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Saved succesfully."),
+        behavior: SnackBarBehavior.floating,
+      ));
+    } catch (e) {
+      print("Error when showing save message: $e");
+    }
   }
 
   void addOne(int index) {
@@ -55,20 +105,69 @@ class _TurfScreenState extends State<TurfScreen> {
     });
   }
 
-  Future<TurvCollection> loadFromFile() async {
-    String jsonString = await helper.readFromFile(widget.file!);
-    Map<String, dynamic> mappedJson = jsonDecode(jsonString);
-    TurvCollection returnThis = TurvCollection.fromJSON(mappedJson);
-    return returnThis;
+  @override
+  void initState() {
+    super.initState();
+    _loadFromFile().then((bool value) {
+      setState(() {
+        loadedFromFile = value;
+      });
+      Future.delayed(Duration.zero, () {
+        _showLoadingStatus(value);
+      });
+    });
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.inactive:
+        print('appLifeCycleState inactive');
+        _saveTurfCollection();
+        break;
+      case AppLifecycleState.resumed:
+        print('appLifeCycleState resumed');
+        break;
+      case AppLifecycleState.paused:
+        print('appLifeCycleState paused');
+        _saveTurfCollection();
+        break;
+      case AppLifecycleState.detached:
+        print('appLifeCycleState detached');
+        _saveTurfCollection();
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _saveTurfCollection(silent: true);
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    _saveTurfCollection(silent: true);
+    super.deactivate();
   }
 
   @override
   Widget build(BuildContext context) {
-  collection ??= TurvCollection.exampleCollection(widget.prefix);
+    collection ??= TurvCollection.exampleCollection(widget.prefix);
 
     return Scaffold(
       appBar: AppBar(title: const Text("Turf")),
       drawer: const MenuDrawer(),
+      floatingActionButton:
+          floatingActionMenu(_addTurvableItem, _saveTurfCollection),
       body: SingleChildScrollView(
         child: ListView.builder(
           shrinkWrap: true,
@@ -85,49 +184,6 @@ class _TurfScreenState extends State<TurfScreen> {
               },
             );
           },
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ElevatedButton(
-              onPressed: _addTurvableItem,
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.redAccent)),
-              child: const Text(
-                "ADD",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                TurvCollection loadedCollection = await loadFromFile();
-                setState(() {
-                  collection = loadedCollection;
-                });
-              },
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.redAccent)),
-              child: const Text(
-                "LOAD",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: _saveTurfCollection,
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.redAccent)),
-              child: const Text(
-                "SAVE",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
         ),
       ),
     );
