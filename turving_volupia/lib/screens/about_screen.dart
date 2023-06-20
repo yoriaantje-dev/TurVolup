@@ -8,7 +8,7 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Over deze app")),
+      appBar: AppBar(title: const Text("Data export")),
       drawer: const MenuDrawer(),
       body: const Placeholder(),
     );

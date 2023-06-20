@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:turving_volupia/main.dart';
 
 import '../data/file_helper.dart';
 import '../data/models/turv_model.dart';
@@ -35,6 +37,7 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
       return true;
     }
     setState(() {
+      //TODO: Get rid of the exampleCollection (Needs to be configured/ generated!)
       collection = TurvCollection.exampleCollection(widget.prefix);
     });
     return false;
@@ -129,19 +132,19 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.inactive:
-        print('appLifeCycleState inactive');
-        _saveTurfCollection();
+        _saveTurfCollection(silent: true);
         break;
       case AppLifecycleState.resumed:
-        print('appLifeCycleState resumed');
+        _saveTurfCollection(silent: true);
         break;
       case AppLifecycleState.paused:
-        print('appLifeCycleState paused');
-        _saveTurfCollection();
+        _saveTurfCollection(silent: true);
         break;
       case AppLifecycleState.detached:
-        print('appLifeCycleState detached');
-        _saveTurfCollection();
+        _saveTurfCollection(silent: true);
+        break;
+      default:
+        _saveTurfCollection(silent: true);
         break;
     }
   }
@@ -161,6 +164,7 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: Get rid of the exampleCollection (Needs to be configured/ generated!)
     collection ??= TurvCollection.exampleCollection(widget.prefix);
 
     return Scaffold(
