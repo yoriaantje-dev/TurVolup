@@ -8,14 +8,22 @@ class TurvableItem {
   TurvableItem(this.name, this.cost);
 
   TurvableItem.fromCommaSeperatedString(String commaSeperatedString) {
+    String? csvName;
+    double? csvCost;
+    int? csvCount;
     List<String> itemAsList = commaSeperatedString.split(",");
-    String csvName = itemAsList[0];
-    double csvCost = double.tryParse(itemAsList[1]) ?? 1;
-    int csvCount = int.tryParse(itemAsList[2]) ?? 0;
 
+    csvName = itemAsList[0];
+    if (itemAsList.length > 1) {
+      csvCost = double.tryParse(itemAsList[1]) ?? 1;
+      if (itemAsList.length > 2) {
+        csvCount = int.tryParse(itemAsList[2]) ?? 0;
+      }
+    }
+    
     name = csvName;
-    cost = csvCost;
-    count = csvCount;
+    cost = csvCost ?? 1;
+    count = csvCount ?? 0;
   }
 
   TurvableItem.fromJSON(Map<String, dynamic> turvableItemMap) {

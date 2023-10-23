@@ -15,7 +15,8 @@ class TurvingScreen extends StatefulWidget {
   State<TurvingScreen> createState() => _TurvingScreenState();
 }
 
-class _TurvingScreenState extends State<TurvingScreen> with WidgetsBindingObserver {
+class _TurvingScreenState extends State<TurvingScreen>
+    with WidgetsBindingObserver {
   List<TurvableItem> turvingItemList = [];
 
   List<TurvableItem> _makeDefaultList() {
@@ -169,12 +170,12 @@ class _TurvingScreenState extends State<TurvingScreen> with WidgetsBindingObserv
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
                   turvingItemList[index].name,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 35,
                     color: Colors.white,
                   ),
                 ),
@@ -184,25 +185,21 @@ class _TurvingScreenState extends State<TurvingScreen> with WidgetsBindingObserv
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () => turvingItemList[index].remove(),
-                    icon: const Icon(Icons.exposure_neg_1),
-                    color: Colors.white,
-                    iconSize: 25,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5.75),
+                    child: removeButton(index),
                   ),
                   Text(
                     turvingItemList[index].count.toString(),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 30,
                       color: Colors.white,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () => turvingItemList[index].add(),
-                    icon: const Icon(Icons.exposure_plus_1),
-                    color: Colors.white,
-                    iconSize: 25,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 3.75),
+                    child: addButton(index),
                   ),
                 ],
               ),
@@ -210,6 +207,30 @@ class _TurvingScreenState extends State<TurvingScreen> with WidgetsBindingObserv
           ],
         ),
       ),
+    );
+  }
+
+  IconButton removeButton(int index) {
+    return IconButton(
+      onPressed: () {
+        turvingItemList[index].remove();
+        _saveList();
+      },
+      icon: const Icon(Icons.exposure_neg_1),
+      color: Colors.white70,
+      iconSize: 45,
+    );
+  }
+
+  IconButton addButton(int index) {
+    return IconButton(
+      onPressed: () {
+        turvingItemList[index].add();
+        _saveList();
+      },
+      icon: const Icon(Icons.exposure_plus_1),
+      color: Colors.white70,
+      iconSize: 45,
     );
   }
 }

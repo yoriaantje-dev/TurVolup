@@ -34,12 +34,18 @@ Widget floatingActionMenu(
 
   return SpeedDial(
     icon: Icons.my_library_books_sharp,
-    onPress: functionSave,
+    onPress: () async {
+      bool confirmed = await displayTextInputDialog(
+          context, textFieldController, addDrinkTitle, addDrinkDescription);
+      if (confirmed) functionAddItem(textFieldController.text);
+    },
     activeIcon: Icons.close_fullscreen_rounded,
     overlayColor: dialMainOverlayColor(context.isDarkMode),
     backgroundColor: dialMainBackgroundColor(context.isDarkMode),
     foregroundColor: Colors.white,
     children: [
+      deleteWithConfirmation(context, functionDelete),
+      saveManually(context, functionSave),
       SpeedDialChild(
         backgroundColor: dialButtonBackgroundColor(context.isDarkMode),
         foregroundColor: Colors.white,
@@ -61,8 +67,6 @@ Widget floatingActionMenu(
           if (confirmed) functionAddItem(textFieldController.text);
         },
       ),
-      saveManually(context, functionSave),
-      deleteWithConfirmation(context, functionDelete)
     ],
   );
 }
@@ -85,7 +89,7 @@ SpeedDialChild saveManually(BuildContext context, Function functionSave) {
         ),
       ),
     ),
-    onTap: functionSave(),
+    onTap: () => functionSave,
   );
 }
 

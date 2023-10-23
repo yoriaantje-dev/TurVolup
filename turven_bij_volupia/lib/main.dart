@@ -16,7 +16,7 @@ class FlutterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/',
+      initialRoute: '/turving',
       routes: {
         '/turving': (context) => TurvingScreen(storage: FileStorage()),
       },
