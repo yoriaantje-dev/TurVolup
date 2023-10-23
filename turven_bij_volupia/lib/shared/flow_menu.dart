@@ -16,12 +16,12 @@ Color? dialButtonBackgroundColor(bool isDarkMode) =>
 // Add Drink text
 const String addDrinkTitle = "Drankje toevoegen";
 const String addDrinkDescription = """
-  Naam,Kosten,StartAantal\n
-  Het start aantal is optioneel. De kosten zijn standaard 1 munt.\n
-  Geef streepje op om deze waardes over te slaan:\n
-    Voorbeeld: Bier,-,-\n
-    Kosten:    Wijn,1.5,-\n
-    Aantal:    Fris,-,3
+Format: Naam,Kosten,StartAantal\n
+Het start aantal is optioneel. De kosten zijn standaard 1 munt.\n
+Geef streepje op om deze waardes over te slaan:
+  Voorbeeld: Bier,-,-
+  Kosten:    Wijn,1.5,-
+  Aantal:    Fris,-,3
 """;
 
 Widget floatingActionMenu(

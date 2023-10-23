@@ -11,9 +11,14 @@ Future<bool> displayTextInputDialog(
     builder: (context) {
       return AlertDialog(
         title: Text(title),
-        content: TextField(
-          controller: textFieldController,
-          decoration: InputDecoration(hintText: hint),
+        content: Column(
+          children: [
+            Text(hint),
+            TextField(
+              controller: textFieldController,
+              decoration: InputDecoration(hintText: hint),
+            ),
+          ],
         ),
         actions: <Widget>[
           TextButton(
