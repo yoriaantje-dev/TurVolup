@@ -28,12 +28,12 @@ class TurvCollection {
       TurvableItem("Bier", 1),
       TurvableItem("Wijn", 1.5),
       TurvableItem("Fris", 1),
+      TurvableItem("Mix-drank", 3),
+      TurvableItem("Cocktails", 2.5),
+      TurvableItem("Radler 0.0", 1.5),
+      TurvableItem("Liefmans", 1.5),
+      TurvableItem("Despo", 1.5),
       TurvableItem("Shot", 1),
-      TurvableItem("Mix-drank", 1),
-      TurvableItem("Radler 0.0", 1),
-      TurvableItem("Cocktails", 1),
-      TurvableItem("Liefmans", 1),
-      TurvableItem("Desporados", 1),
     ];
     DateTime currentDate = DateTime.now();
     collectionId =
