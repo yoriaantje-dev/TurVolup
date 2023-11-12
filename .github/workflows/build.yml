@@ -32,4 +32,4 @@ jobs:
       
       - name: Start release build
         working-directory: ./turven_bij_volupia/
-        run: flutter build apk -v
+        run: flutter build apk --release -v

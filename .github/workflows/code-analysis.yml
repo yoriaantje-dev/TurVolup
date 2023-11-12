@@ -29,13 +29,21 @@ jobs:
       - name: Get dependencies
         working-directory: ./turven_bij_volupia/
         run: flutter pub get --suppress-analytics
+        
+      # Uncomment this step to verify the use of 'dart format' on each commit.
+      - name: Verify formatting
+        working-directory: ./turven_bij_volupia/
+        run: |
+          if [ -n "$(dart format --set-exit-if-changed .)" ]; then
+            echo "::warning::Formatting in root-folder incorrect, run dart format . in project-root (turven_bij_volupia) folder and use GIT to see changes."
+            exit 0
+          fi
+          if [ -n "$(dart format --set-exit-if-changed ./lib/)" ]; then
+            echo "::error::Formatting incorrect, run `dart format .\lib\` in project 'lib' folder and use GIT to see changes."
+            exit 1
+          fi
 
       # Consider passing '--fatal-infos' for slightly stricter analysis.
       - name: Analyze project source
         working-directory: ./turven_bij_volupia/
         run: flutter analyze --fatal-warnings
-
-      # Uncomment this step to verify the use of 'dart format' on each commit.
-      - name: Verify formatting
-        working-directory: ./turven_bij_volupia/
-        run: dart format --output=show
