@@ -38,8 +38,8 @@ jobs:
             echo "::warning::Formatting in root-folder incorrect, run dart format . in project-root (turven_bij_volupia) folder and use GIT to see changes."
             exit 0
           fi
-          if [ -n "$(dart format --set-exit-if-changed ./lib/)" ]; then
-            echo "::error::Formatting incorrect, run `dart format .\lib\` in project 'lib' folder and use GIT to see changes."
+          if [ -n "$(dart format --set-exit-if-changed ./lib)" ]; then
+            echo "::error::Formatting incorrect, run dart format ./lib in project 'lib' folder and use GIT to see changes."
             exit 1
           fi
 
