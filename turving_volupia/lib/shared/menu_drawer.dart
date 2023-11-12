@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:turving_volupia/main.dart';
 import '../screens/about_screen.dart';
-import '../screens/category_screen.dart';
+import '../screens/default_item_screen.dart';
 import '../screens/home_screen.dart';
 
 class MenuDrawer extends StatelessWidget {
@@ -9,14 +10,14 @@ class MenuDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> menuTitles = [];
-    menuTitles = ["Home", "Categories", "Export"];
+    menuTitles = ["Home", "Standaard Items", "Export"];
 
     return Drawer(
       child: Column(
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
+              color: context.isDarkMode ? Colors.red[700] : Colors.red[200],
             ),
             child: Center(
               child: Image.asset(
@@ -43,10 +44,10 @@ class MenuDrawer extends StatelessWidget {
     for (String menuItem in menuTitles) {
       Widget screen = Container();
       menuItems.add(ListTile(
-        leading: getIcon(menuItem),
+        leading: getIcon(menuItem, context.isDarkMode),
         title: Text(menuItem,
             style: theme.textTheme.headlineMedium!
-                .copyWith(color: Colors.red.shade400)),
+                .copyWith(color: Colors.red.shade400,fontSize: 26)),
         onTap: () {
           screen = getScreen(menuItem);
           Navigator.of(context).pop();
@@ -59,13 +60,13 @@ class MenuDrawer extends StatelessWidget {
     return menuItems;
   }
 
-  Icon getIcon(String menuItem) {
+  Icon getIcon(String menuItem, bool isDarkMode) {
     late IconData returnIcon;
     switch (menuItem) {
       case "Home":
         returnIcon = Icons.home;
         break;
-      case "Categories":
+      case "Standaard Items":
         returnIcon = Icons.list_rounded;
         break;
       case "Export":
@@ -77,8 +78,8 @@ class MenuDrawer extends StatelessWidget {
     }
     return Icon(
       returnIcon,
-      color: Colors.red.shade200,
-      size: 28,
+      color: isDarkMode ? Colors.red[700] : Colors.redAccent,
+      size: 35,
     );
   }
 
@@ -86,8 +87,8 @@ class MenuDrawer extends StatelessWidget {
     switch (menuItem) {
       case "Home":
         return const HomeScreen();
-      case "Categories":
-        return const CategoryScreen();
+      case "Standaard Items":
+        return const DefaultItemScreen();
       case "Export":
         return const AboutScreen();
       default:

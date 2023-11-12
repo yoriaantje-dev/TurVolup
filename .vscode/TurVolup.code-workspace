@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"path": "../.vscode",
+			"name": "Settings"
+		},
+		{
+			"path": "../turven_bij_volupia/lib",
+			"name": "Code"
+		},
+		{
+			"path": "../turven_bij_volupia",
+			"name": "App folder"
+		},
+		{
+			"path": "../app-releases",
+			"name": "App Releases"
+		},
+		{
+			"path": "../turving_volupia",
+			"name": "Old code"
+		},
+		{
+			"path": "../",
+			"name": "Root"
+		}
+	],
+	"settings": {}
+}

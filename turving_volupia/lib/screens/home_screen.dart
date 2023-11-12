@@ -1,11 +1,8 @@
-// ignore_for_file: avoid_print
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:turving_volupia/main.dart';
 import 'package:turving_volupia/screens/widgets/file_prefix_bar.dart';
-
-// Disabled for Release v0.0.1
-// ignore: unused_import
 import '../data/file_helper.dart';
 import '../shared/menu_drawer.dart';
 import '../shared/popup_dialog.dart';
@@ -31,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(title: const Text("Home")),
       drawer: const MenuDrawer(),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        backgroundColor: context.isDarkMode ? Colors.red.shade800 : Colors.red,
         onPressed: () async {
           helper.getFiles().then((List<File> files) {
             DateTime currentDate = DateTime.now();
@@ -40,10 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             bool flag = false;
             for (File file in files) {
-              if (basename(file.path) == fileName) {
-                print("${basename(file.path)} is equal to $fileName");
-                flag = true;
-              }
+              if (basename(file.path) == fileName) flag = true;
             }
             if (flag) {
               confirmOverwriteFile(context, prefixController.text);
@@ -60,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           });
         },
+        child: const Icon(Icons.add),
       ),
       body: Column(
         children: [
@@ -79,24 +74,36 @@ class _HomeScreenState extends State<HomeScreen> {
                 return ListView.builder(
                   itemCount: files.length,
                   itemBuilder: (context, index) {
-                    return Dismissible(
-                      key: Key(files[index].toString()),
-                      onDismissed: (direction) {
-                        helper.deleteFile(files[index]);
-                      },
-                      child: ListTile(
-                        title: Text(basename(files[index].path)),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TurfScreen(
-                                files[index],
-                                prefixController.text,
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        color: Colors.redAccent,
+                        child: ListTile(
+                          title: Text(
+                            basename(files[index].path),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          trailing: IconButton(
+                            color: Colors.white,
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              _deleteItem(context, files, index);
+                            },
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TurfScreen(
+                                  files[index],
+                                  prefixController.text,
+                                ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     );
                   },
@@ -107,5 +114,24 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  void _deleteItem(BuildContext context, List<File> files, int index) {
+    final SnackBar deleteSnackBar = SnackBar(
+      content: Text(
+        '${basename(files[index].path)} verwijderd.',
+        style:
+            TextStyle(color: context.isDarkMode ? Colors.black : Colors.white),
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: context.isDarkMode ? Colors.white : Colors.grey,
+    );
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(deleteSnackBar);
+
+    helper.deleteFile(files[index]);
+    setState(() {
+      files.removeAt(index);
+    });
   }
 }

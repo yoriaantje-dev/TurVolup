@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:turving_volupia/main.dart';
 
 import '../data/file_helper.dart';
 import '../data/models/turv_model.dart';
@@ -24,6 +26,9 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
   bool loadedFromFile = false;
   FileHelper helper = FileHelper();
 
+  Color snackbarTextColor() => context.isDarkMode ? Colors.black : Colors.white;
+  Color snackbarBackgroundColor() => context.isDarkMode ? Colors.white : Colors.grey;
+
   Future<bool> _loadFromFile() async {
     if (widget.file != null) {
       String jsonString = await helper.readFromFile(widget.file!);
@@ -35,6 +40,7 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
       return true;
     }
     setState(() {
+      //TODO: Get rid of the exampleCollection (Needs to be configured/ generated!)
       collection = TurvCollection.exampleCollection(widget.prefix);
     });
     return false;
@@ -66,30 +72,50 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
 
   void _showLoadingStatus(bool status) {
     if (status) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Loaded from file."),
-          behavior: SnackBarBehavior.floating,
+      SnackBar snackBar = SnackBar(
+        content: Text(
+          "Loaded from file.",
+          style: TextStyle(
+              color: snackbarTextColor()),
         ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: snackbarBackgroundColor(),
       );
+      _showSnackBar(snackBar);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Defaults loaded."),
-          behavior: SnackBarBehavior.floating,
+      SnackBar snackBar = SnackBar(
+        content: Text(
+          "Defaults loaded.",
+          style: TextStyle(
+              color: snackbarTextColor()),
         ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: snackbarBackgroundColor(),
       );
+      _showSnackBar(snackBar);
     }
+  }
+
+  void _showSnackBar(SnackBar snackBar) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void _savedMessage() {
     try {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Saved succesfully."),
-        behavior: SnackBarBehavior.floating,
-      ));
+      SnackBar snackBar = SnackBar(
+        content: Text("Saved succesfully.",
+        style:
+            TextStyle(color: snackbarTextColor()),
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: snackbarBackgroundColor(),
+        );
+      _showSnackBar(snackBar);
     } catch (e) {
-      print("Error when showing save message: $e");
+      if (kDebugMode) {
+        print("Error when showing save message: $e");
+      }
     }
   }
 
@@ -129,19 +155,19 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.inactive:
-        print('appLifeCycleState inactive');
-        _saveTurfCollection();
+        _saveTurfCollection(silent: true);
         break;
       case AppLifecycleState.resumed:
-        print('appLifeCycleState resumed');
+        _saveTurfCollection(silent: true);
         break;
       case AppLifecycleState.paused:
-        print('appLifeCycleState paused');
-        _saveTurfCollection();
+        _saveTurfCollection(silent: true);
         break;
       case AppLifecycleState.detached:
-        print('appLifeCycleState detached');
-        _saveTurfCollection();
+        _saveTurfCollection(silent: true);
+        break;
+      default:
+        _saveTurfCollection(silent: true);
         break;
     }
   }
@@ -161,13 +187,14 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: Get rid of the exampleCollection (Needs to be configured/ generated!)
     collection ??= TurvCollection.exampleCollection(widget.prefix);
 
     return Scaffold(
       appBar: AppBar(title: const Text("Turf")),
       drawer: const MenuDrawer(),
-      floatingActionButton:
-          floatingActionMenu(_addTurvableItem, _saveTurfCollection),
+      floatingActionButton: floatingActionMenu(
+          context.isDarkMode, _addTurvableItem, _saveTurfCollection),
       body: SingleChildScrollView(
         child: ListView.builder(
           shrinkWrap: true,

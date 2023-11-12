@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:turving_volupia/main.dart';
 
 import '../data/models/turv_model.dart';
 import '../screens/turf_screen.dart';
@@ -68,6 +69,11 @@ class _AddTurvableItemDialogState extends State<AddTurvableItemDialog> {
           },
         ),
         ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: context.isDarkMode
+                ? MaterialStatePropertyAll<Color>(Colors.red.shade800)
+                : const MaterialStatePropertyAll<Color>(Colors.red),
+          ),
           child: const Text('SAVE'),
           onPressed: () {
             _onSavePressed(context);
@@ -79,13 +85,18 @@ class _AddTurvableItemDialogState extends State<AddTurvableItemDialog> {
 }
 
 confirmOverwriteFile(BuildContext context, String prefix) {
-  Widget cancelButton = ElevatedButton(
+  Widget cancelButton = TextButton(
     child: const Text("Cancel"),
     onPressed: () {
       Navigator.of(context).pop();
     },
   );
   Widget continueButton = ElevatedButton(
+    style: ButtonStyle(
+      backgroundColor: context.isDarkMode
+          ? MaterialStatePropertyAll<Color>(Colors.red.shade800)
+          : const MaterialStatePropertyAll<Color>(Colors.red),
+    ),
     child: const Text("Continue"),
     onPressed: () {
       Navigator.of(context).pop();
