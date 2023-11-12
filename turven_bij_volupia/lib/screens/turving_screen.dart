@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:turven_bij_volupia/data/models/turving_collection_model.dart';
 import '../shared/drawer.dart';
 import '../shared/flow_menu.dart';
 
@@ -21,11 +22,7 @@ class _TurvingScreenState extends State<TurvingScreen>
   List<TurvableItem> turvingItemList = [];
 
   List<TurvableItem> _makeDefaultList() {
-    return [
-      TurvableItem("Bier", 1),
-      TurvableItem("Wijn", 1.5),
-      TurvableItem("Fris", 1),
-    ];
+    return TurvCollection.exampleCollection("Default").items;
   }
 
   void _removeDuplicateItems() {
@@ -136,23 +133,17 @@ class _TurvingScreenState extends State<TurvingScreen>
   @override
   Widget build(BuildContext context) {
     if (turvingItemList.isEmpty) {
-      _loadFromFile(reset: false);
+      _loadFromFile();
     } else {
-      _saveList(reset: false);
+      _saveList();
     }
 
     return Scaffold(
       appBar: AppBar(title: const Text("Aftekenlijst")),
       drawer: MenuDrawer(
-          functionAddItem: functionAddTurvableItem,
-          functionSave: _saveList,
-          functionDelete: _deleteList,
-        ),
-      floatingActionButton: floatingActionMenu(
-        context,
-        _saveList,
-        _deleteList,
-        functionAddTurvableItem,
+        functionAddItem: functionAddTurvableItem,
+        functionSave: _saveList,
+        functionDelete: _deleteList,
       ),
       body: SingleChildScrollView(
         child: ListView.builder(
@@ -170,47 +161,57 @@ class _TurvingScreenState extends State<TurvingScreen>
   Widget turfItemCard(int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Card(
-        color: Colors.redAccent,
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  turvingItemList[index].name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 35,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 5.75),
-                    child: removeButton(index),
-                  ),
-                  Text(
-                    turvingItemList[index].count.toString(),
+      child: GestureDetector(
+        onLongPress: () {
+          turvingItemList[index].remove();
+          _saveList();
+        },
+        onTap: () {
+          turvingItemList[index].add();
+          _saveList();
+        },
+        child: Card(
+          color: Colors.redAccent,
+          child: Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    turvingItemList[index].name,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 30,
+                      fontSize: 28.25,
                       color: Colors.white,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 3.75),
-                    child: addButton(index),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 4.75),
+                      child: removeButton(index),
+                    ),
+                    Text(
+                      turvingItemList[index].count.toString(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 3.25),
+                      child: addButton(index),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -223,8 +224,8 @@ class _TurvingScreenState extends State<TurvingScreen>
         _saveList();
       },
       icon: const Icon(Icons.exposure_neg_1),
-      color: Colors.white70,
-      iconSize: 45,
+      color: Colors.white30,
+      iconSize: 20,
     );
   }
 
@@ -236,7 +237,7 @@ class _TurvingScreenState extends State<TurvingScreen>
       },
       icon: const Icon(Icons.exposure_plus_1),
       color: Colors.white70,
-      iconSize: 45,
+      iconSize: 50,
     );
   }
 }
