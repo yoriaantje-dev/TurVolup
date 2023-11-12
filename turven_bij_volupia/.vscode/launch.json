@@ -5,17 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Turving_Debug",
-            "type": "dart",
+            "name": "Turving (Debug)",
             "request": "launch",
-            "program": "turven_bij_volupia/lib/main.dart"
+            "type": "dart"
         },
         {
-            "name": "TurVolup Check (Release)",
-            "type": "dart",
+            "name": "Turving (Release)",
             "request": "launch",
-            "program": "turven_bij_volupia/lib/main.dart",
+            "type": "dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "Turving (Profile)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
         }
     ]
 }

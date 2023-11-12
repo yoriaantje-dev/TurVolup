@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../shared/drawer.dart';
 import '../shared/flow_menu.dart';
 
 import '../data/file_helper.dart';
@@ -142,6 +143,11 @@ class _TurvingScreenState extends State<TurvingScreen>
 
     return Scaffold(
       appBar: AppBar(title: const Text("Aftekenlijst")),
+      drawer: MenuDrawer(
+          functionAddItem: functionAddTurvableItem,
+          functionSave: _saveList,
+          functionDelete: _deleteList,
+        ),
       floatingActionButton: floatingActionMenu(
         context,
         _saveList,
