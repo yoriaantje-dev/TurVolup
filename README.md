@@ -1,3 +1,6 @@
+[![Code-analysis](https://github.com/yoriaantje-dev/TurVolup/actions/workflows/code-analysis.yml/badge.svg)](https://github.com/yoriaantje-dev/TurVolup/actions/workflows/code-analysis.yml)
+[![Build](https://github.com/yoriaantje-dev/TurVolup/actions/workflows/build.yml/badge.svg)](https://github.com/yoriaantje-dev/TurVolup/actions/workflows/build.yml)
+[![Ready-for-export](https://github.com/yoriaantje-dev/TurVolup/actions/workflows/ready-for-export.yml/badge.svg)](https://github.com/yoriaantje-dev/TurVolup/actions/workflows/ready-for-export.yml)
 # TurVolup
 Turving app for SV Volupia
 
