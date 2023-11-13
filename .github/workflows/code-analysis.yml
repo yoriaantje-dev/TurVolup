@@ -1,0 +1,49 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Code-analysis
+
+on:
+  push:
+    branches: [ "development" ]
+  pull_request:
+    branches: [ "development" ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.13.3"
+          channel: 'stable'
+          
+      - name: Get dependencies
+        working-directory: ./turven_bij_volupia/
+        run: flutter pub get --suppress-analytics
+        
+      # Uncomment this step to verify the use of 'dart format' on each commit.
+      - name: Verify formatting
+        working-directory: ./turven_bij_volupia/
+        run: |
+          if [ -n "$(dart format --set-exit-if-changed .)" ]; then
+            echo "::warning::Formatting in root-folder incorrect, run dart format . in project-root (turven_bij_volupia) folder and use GIT to see changes."
+            exit 0
+          fi
+          if [ -n "$(dart format --set-exit-if-changed ./lib)" ]; then
+            echo "::error::Formatting incorrect, run dart format ./lib in project 'lib' folder and use GIT to see changes."
+            exit 1
+          fi
+
+      # Consider passing '--fatal-infos' for slightly stricter analysis.
+      - name: Analyze project source
+        working-directory: ./turven_bij_volupia/
+        run: flutter analyze --fatal-warnings
