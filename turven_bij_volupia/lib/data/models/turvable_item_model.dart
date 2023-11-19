@@ -20,7 +20,7 @@ class TurvableItem {
         csvCount = int.tryParse(itemAsList[2]) ?? 0;
       }
     }
-    
+
     name = csvName;
     cost = csvCost ?? 1;
     count = csvCount ?? 0;
@@ -56,5 +56,24 @@ class TurvableItem {
     if (kDebugMode) {
       print("Set $amount in $name");
     }
+  }
+
+  String getTotalCostString() {
+    String returnString;
+    double totalCost = cost * count;
+    int intPart = totalCost.truncate();
+    double decimalPart = totalCost - intPart.toDouble();
+
+    if (decimalPart == 0) {
+      returnString = intPart.toString();
+    } else {
+      returnString = totalCost.toString();
+    }
+    if ((intPart > 1 || intPart == 0) && decimalPart == 0) {
+      returnString += " munten";
+    } else {
+      returnString += " munt";
+    }
+    return returnString;
   }
 }
