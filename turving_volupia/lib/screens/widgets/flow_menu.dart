@@ -5,14 +5,12 @@ Widget floatingActionMenu(
     bool isDarkMode, dynamic addItemFunction, dynamic saveCollectionFunction) {
   return SpeedDial(
     overlayColor: isDarkMode ? Colors.grey[900] : Colors.grey[300],
-    backgroundColor:
-        isDarkMode ? Colors.red[600] : Colors.redAccent[200],
+    backgroundColor: isDarkMode ? Colors.red[600] : Colors.redAccent[200],
     foregroundColor: Colors.white,
     animatedIcon: AnimatedIcons.menu_close,
     children: [
       SpeedDialChild(
-        backgroundColor:
-            isDarkMode ? Colors.red[400] : Colors.red[200],
+        backgroundColor: isDarkMode ? Colors.red[400] : Colors.red[200],
         foregroundColor: Colors.white,
         labelBackgroundColor: isDarkMode ? Colors.grey[600] : Colors.grey[200],
         child: const Icon(Icons.add),
@@ -31,8 +29,7 @@ Widget floatingActionMenu(
         onTap: addItemFunction,
       ),
       SpeedDialChild(
-        backgroundColor:
-            isDarkMode ? Colors.red[400] : Colors.red[200],
+        backgroundColor: isDarkMode ? Colors.red[400] : Colors.red[200],
         foregroundColor: Colors.white,
         child: const Icon(Icons.save),
         labelWidget: Container(

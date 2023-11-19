@@ -21,7 +21,10 @@ class FilePrefixBar extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
             children: [
-              const Text("Prefix: ", style: TextStyle(fontSize: 18),),
+              const Text(
+                "Prefix: ",
+                style: TextStyle(fontSize: 18),
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),

@@ -16,15 +16,17 @@ Turving app for SV Volupia
   - Shot,        kost 1 munt
 
 ### Changelog:
+**v0.3.0:**
+  - Export-overzicht voor omzetformulier
+  - Code-slot op _"Delete All"_
+  - Verwijdering **-1** knop
+
 **v0.2.1:**
   - Toegevoegd de drankjes
   - Gewijzigd de volgorde van dranjes
   - Menu verplaatst naar "Hamburger"-menu
   - Turf-items zijn nu aanklikbaar: voegt één toe aan de teller
   - Turf-items aanklikken en vasthouden: verwijderd één item van de teller
-
+---
 ### Future changes:
-**v0.3.0:**
-  - Export-overzicht voor omzetformulier
-  - Code-slot op _"Delete All"_
-  - Verwijdering **-1** knop
+

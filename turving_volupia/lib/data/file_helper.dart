@@ -27,25 +27,26 @@ class FileHelper {
     return files;
   }
 
-  Future writeToFile(String fileName, String content) async{
+  Future writeToFile(String fileName, String content) async {
     final String dirPath = await _turfStoragePath;
     final String filePath = join(dirPath, fileName);
     File file = File(filePath);
     return file.writeAsString(content);
   }
-  Future saveCollection(TurvCollection collection) async{
+
+  Future saveCollection(TurvCollection collection) async {
     final String dirPath = await _turfStoragePath;
     final String filePath = join(dirPath, collection.collectionId);
     File file = File(filePath);
     return file.writeAsString(collection.createSaveString());
   }
 
-  Future<String> readFromFile (File file) async {
+  Future<String> readFromFile(File file) async {
     String content = await file.readAsString();
     return content;
   }
 
-  Future deleteFile (File file) async {
+  Future deleteFile(File file) async {
     await file.delete();
   }
 }

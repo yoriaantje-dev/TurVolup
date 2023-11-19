@@ -32,6 +32,7 @@ class MenuDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController textFieldController = TextEditingController();
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,

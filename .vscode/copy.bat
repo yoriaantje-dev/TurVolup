@@ -1,1 +1,0 @@
-copy ..\turven_bij_volupia\build\app\outputs\flutter-apk\app-release.apk ..\app-releases\TurVolup_v0.3.0.apk
