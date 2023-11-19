@@ -27,7 +27,8 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
   FileHelper helper = FileHelper();
 
   Color snackbarTextColor() => context.isDarkMode ? Colors.black : Colors.white;
-  Color snackbarBackgroundColor() => context.isDarkMode ? Colors.white : Colors.grey;
+  Color snackbarBackgroundColor() =>
+      context.isDarkMode ? Colors.white : Colors.grey;
 
   Future<bool> _loadFromFile() async {
     if (widget.file != null) {
@@ -40,7 +41,6 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
       return true;
     }
     setState(() {
-      //TODO: Get rid of the exampleCollection (Needs to be configured/ generated!)
       collection = TurvCollection.exampleCollection(widget.prefix);
     });
     return false;
@@ -75,8 +75,7 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
       SnackBar snackBar = SnackBar(
         content: Text(
           "Loaded from file.",
-          style: TextStyle(
-              color: snackbarTextColor()),
+          style: TextStyle(color: snackbarTextColor()),
         ),
         behavior: SnackBarBehavior.floating,
         backgroundColor: snackbarBackgroundColor(),
@@ -86,8 +85,7 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
       SnackBar snackBar = SnackBar(
         content: Text(
           "Defaults loaded.",
-          style: TextStyle(
-              color: snackbarTextColor()),
+          style: TextStyle(color: snackbarTextColor()),
         ),
         behavior: SnackBarBehavior.floating,
         backgroundColor: snackbarBackgroundColor(),
@@ -104,13 +102,13 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
   void _savedMessage() {
     try {
       SnackBar snackBar = SnackBar(
-        content: Text("Saved succesfully.",
-        style:
-            TextStyle(color: snackbarTextColor()),
-      ),
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: snackbarBackgroundColor(),
-        );
+        content: Text(
+          "Saved succesfully.",
+          style: TextStyle(color: snackbarTextColor()),
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: snackbarBackgroundColor(),
+      );
       _showSnackBar(snackBar);
     } catch (e) {
       if (kDebugMode) {
@@ -187,7 +185,6 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Get rid of the exampleCollection (Needs to be configured/ generated!)
     collection ??= TurvCollection.exampleCollection(widget.prefix);
 
     return Scaffold(

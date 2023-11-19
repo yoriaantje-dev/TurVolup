@@ -1,10 +1,7 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:turven_bij_volupia/data/models/turving_collection_model.dart';
-import '../shared/drawer.dart';
-import '../shared/flow_menu.dart';
+import 'package:turven_bij_volupia/data/data_helper.dart';
 
+import '../shared/drawer.dart';
 import '../data/file_helper.dart';
 import '../data/models/turvable_item_model.dart';
 
@@ -21,129 +18,31 @@ class _TurvingScreenState extends State<TurvingScreen>
     with WidgetsBindingObserver {
   List<TurvableItem> turvingItemList = [];
 
-  List<TurvableItem> _makeDefaultList() {
-    return TurvCollection.exampleCollection("Default").items;
-  }
-
-  void _removeDuplicateItems() {
-    final nameSet = <String>{};
-    final noDuplicateList = <TurvableItem>[];
-    for (final turvableItem in turvingItemList) {
-      if (nameSet.add(turvableItem.name.trim().toLowerCase())) {
-        noDuplicateList.add(turvableItem);
-      }
-    }
+  void setList(List<TurvableItem> incomingList) {
+    List<TurvableItem> noDupesList = incomingList.removeDuplicates();
     setState(() {
-      turvingItemList = noDuplicateList;
+      turvingItemList = noDupesList;
     });
+    widget.storage.saveTurvingListToFile(noDupesList);
   }
 
-  //#region CRUD
-  void _loadFromFile({bool reset = false}) async {
-    String jsonString = await widget.storage.readFileAsString();
-    try {
-      Map<String, dynamic> mappedJson = jsonDecode(jsonString);
-      for (Map<String, dynamic> turvableItemMap in mappedJson["turvingList"]) {
-        setState(() {
-          turvingItemList.add(TurvableItem.fromJSON(turvableItemMap));
-        });
-      }
-    } catch (e) {
-      setState(() {
-        turvingItemList = _makeDefaultList();
-      });
-      if (kDebugMode) print("Error: $e\n" "Loaded from defaults.");
-    }
-
-    if (turvingItemList.isEmpty || reset) {
-      // if (reset) {
-      setState(() {
-        turvingItemList = _makeDefaultList();
-      });
-    } else if (kDebugMode) {
-      print("Loaded from file.");
-    }
-  }
-
-  void _saveList({bool reset = false}) async {
-    if (reset) {
-      setState(() {
-        turvingItemList = _makeDefaultList();
-      });
-    }
-    _removeDuplicateItems();
-
-    List<Map<String, dynamic>> saveList = [];
-    for (TurvableItem turvableItem in turvingItemList) {
-      saveList.add(turvableItem.toMap());
-    }
-    Map<String, dynamic> saveMap = {"turvingList": saveList};
-    widget.storage.writeFile(jsonEncode(saveMap));
-    if (kDebugMode) print("Saved to file.");
-  }
-
-  void _deleteList() {
-    setState(() {
-      turvingItemList = [];
-    });
-    _saveList();
-  }
-  //#endregion
-
-  void removeParticipantAtIndex(int index) async {
-    bool confirmed = await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Verwijder ${turvingItemList[index].name}"),
-          content: Text(
-              "Weet je zeker dat je '${turvingItemList[index].name}' wilt verwijderen?"),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Annuleren'),
-              onPressed: () => Navigator.of(context).pop(false),
-            ),
-            ElevatedButton(
-              child: const Text('Ja'),
-              onPressed: () => Navigator.of(context).pop(true),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (confirmed) {
-      setState(() {
-        turvingItemList.removeAt(index);
-      });
-      _saveList();
-    }
-  }
-
-  void functionAddTurvableItem(String input) async {
-    if (input.isNotEmpty) {
-      setState(() {
-        turvingItemList.add(TurvableItem.fromCommaSeperatedString(input));
-      });
-      _removeDuplicateItems();
-      _saveList();
-    }
-  }
+  List<TurvableItem> getList() => turvingItemList;
 
   @override
   Widget build(BuildContext context) {
     if (turvingItemList.isEmpty) {
-      _loadFromFile();
+      widget.storage.loadItemsFromFile().then((value) => setList(value));
     } else {
-      _saveList();
+      widget.storage.saveTurvingListToFile(turvingItemList);
     }
 
     return Scaffold(
       appBar: AppBar(title: const Text("Aftekenlijst")),
       drawer: MenuDrawer(
-        functionAddItem: functionAddTurvableItem,
-        functionSave: _saveList,
-        functionDelete: _deleteList,
+        functionAddItem: turvingItemList.functionAddTurvableItem,
+        functionSave: widget.storage.saveTurvingListToFile,
+        functionSetList: setList,
+        functionGetList: getList,
       ),
       body: SingleChildScrollView(
         child: ListView.builder(
@@ -164,11 +63,13 @@ class _TurvingScreenState extends State<TurvingScreen>
       child: GestureDetector(
         onLongPress: () {
           turvingItemList[index].remove();
-          _saveList();
+          setList(turvingItemList);
+          widget.storage.saveTurvingListToFile(turvingItemList);
         },
         onTap: () {
           turvingItemList[index].add();
-          _saveList();
+          setList(turvingItemList);
+          widget.storage.saveTurvingListToFile(turvingItemList);
         },
         child: Card(
           color: Colors.redAccent,
@@ -191,10 +92,6 @@ class _TurvingScreenState extends State<TurvingScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 4.75),
-                      child: removeButton(index),
-                    ),
                     Text(
                       turvingItemList[index].count.toString(),
                       style: const TextStyle(
@@ -205,7 +102,7 @@ class _TurvingScreenState extends State<TurvingScreen>
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 3.25),
-                      child: addButton(index),
+                      child: _addButton(index),
                     ),
                   ],
                 ),
@@ -217,11 +114,13 @@ class _TurvingScreenState extends State<TurvingScreen>
     );
   }
 
-  IconButton removeButton(int index) {
+  // ignore: unused_element
+  IconButton _removeButton(int index) {
     return IconButton(
       onPressed: () {
         turvingItemList[index].remove();
-        _saveList();
+        setList(turvingItemList);
+        widget.storage.saveTurvingListToFile(turvingItemList);
       },
       icon: const Icon(Icons.exposure_neg_1),
       color: Colors.white30,
@@ -229,11 +128,12 @@ class _TurvingScreenState extends State<TurvingScreen>
     );
   }
 
-  IconButton addButton(int index) {
+  IconButton _addButton(int index) {
     return IconButton(
       onPressed: () {
         turvingItemList[index].add();
-        _saveList();
+        setList(turvingItemList);
+        widget.storage.saveTurvingListToFile(turvingItemList);
       },
       icon: const Icon(Icons.exposure_plus_1),
       color: Colors.white70,
