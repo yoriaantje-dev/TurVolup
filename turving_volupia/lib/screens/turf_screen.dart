@@ -40,7 +40,6 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
       return true;
     }
     setState(() {
-      //TODO: Get rid of the exampleCollection (Needs to be configured/ generated!)
       collection = TurvCollection.exampleCollection(widget.prefix);
     });
     return false;
@@ -187,7 +186,6 @@ class _TurfScreenState extends State<TurfScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Get rid of the exampleCollection (Needs to be configured/ generated!)
     collection ??= TurvCollection.exampleCollection(widget.prefix);
 
     return Scaffold(
