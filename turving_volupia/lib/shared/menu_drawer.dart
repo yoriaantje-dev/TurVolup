@@ -23,7 +23,7 @@ class MenuDrawer extends StatelessWidget {
               child: Image.asset(
                 "assets/VolupiaLogo_WIT.png",
                 fit: BoxFit.fitHeight,
-                ),
+              ),
             ),
           ),
           Expanded(
@@ -47,7 +47,7 @@ class MenuDrawer extends StatelessWidget {
         leading: getIcon(menuItem, context.isDarkMode),
         title: Text(menuItem,
             style: theme.textTheme.headlineMedium!
-                .copyWith(color: Colors.red.shade400,fontSize: 26)),
+                .copyWith(color: Colors.red.shade400, fontSize: 26)),
         onTap: () {
           screen = getScreen(menuItem);
           Navigator.of(context).pop();

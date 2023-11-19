@@ -55,7 +55,8 @@ class FileStorage {
     return returnList.removeDuplicates();
   }
 
-  void saveTurvingListToFile(List<TurvableItem> incomingList, {bool reset = false}) async {
+  void saveTurvingListToFile(List<TurvableItem> incomingList,
+      {bool reset = false}) async {
     if (reset) incomingList = TurvCollection.exampleCollection("Default").items;
     incomingList.removeDuplicates();
 
