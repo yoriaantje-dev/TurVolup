@@ -19,9 +19,11 @@ class _TurvingScreenState extends State<TurvingScreen>
   List<TurvableItem> turvingItemList = [];
 
   void setList(List<TurvableItem> incomingList) {
+    List<TurvableItem> noDupesList = incomingList.removeDuplicates();
     setState(() {
-      turvingItemList = incomingList;
+      turvingItemList = noDupesList;
     });
+    widget.storage.saveTurvingListToFile(noDupesList);
   }
 
   List<TurvableItem> getList() => turvingItemList;
@@ -112,6 +114,7 @@ class _TurvingScreenState extends State<TurvingScreen>
     );
   }
 
+  // ignore: unused_element
   IconButton _removeButton(int index) {
     return IconButton(
       onPressed: () {

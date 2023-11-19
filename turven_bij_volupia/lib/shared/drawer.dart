@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:turven_bij_volupia/data/data_helper.dart';
-import 'package:turven_bij_volupia/main.dart';
-
+import '../data/data_helper.dart';
+import '../data/models/turving_collection_model.dart';
 import '../data/models/turvable_item_model.dart';
 import 'popup_dialog.dart';
+import '../main.dart';
 
 // Add Drink text
 const String addDrinkTitle = "Drankje toevoegen";
